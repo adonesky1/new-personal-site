@@ -1,29 +1,24 @@
-var express = require('express');
-var bodyParser = require('body-parser');
-// UNCOMMENT THE DATABASE YOU'D LIKE TO USE
-// var items = require('../database-mysql');
-// var items = require('../database-mongo');
 
-var app = express();
+const express = require('express');
+const bodyParser = require('body-parser');
+const path = require('path');
+const app = express();
 
-// UNCOMMENT FOR REACT
-// app.use(express.static(__dirname + '/../react-client/dist'));
+app.use(bodyParser.json());
+app.use(express.static(`${__dirname}/../client/dist`));
 
-// UNCOMMENT FOR ANGULAR
-// app.use(express.static(__dirname + '/../angular-client'));
-// app.use(express.static(__dirname + '/../node_modules'));
+// app.get('/resume', function (req, res) {
+//   res.sendFile(path.join(__dirname, '../JOHNJURESUME2018.pdf'));
+// });
 
-app.get('/items', function (req, res) {
-  items.selectAll(function(err, data) {
-    if(err) {
-      res.sendStatus(500);
-    } else {
-      res.json(data);
+app.get('/*', function (req, res) {
+  res.sendFile(path.join(__dirname, '../client/dist/index.html'), function (err) {
+    if (err) {
+      res.status(500).send(err);
     }
   });
 });
 
-app.listen(3000, function() {
-  console.log('listening on port 3000!');
+app.listen(process.env.PORT || 3000, () => {
+  console.log('listening on port 3000');
 });
-
